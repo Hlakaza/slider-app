@@ -144,7 +144,6 @@ export class SlideItemComponent {
         this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
         setTimeout(() => {
             this.renderer.setStyle(this.el.nativeElement, 'transition', 'opacity ' + duration + 'ms');
-            // this.renderer.setStyle(this.el.nativeElement, "transition-duration", duration+ "ms");
             this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
         }, 0);
     }
