@@ -236,6 +236,7 @@ firstSwipeDate = Date.now();
                 // this.onSwipeRight.emit(swipeFrameDistance);
                 this.slideRight();
                 console.log('swiped right', swipeFrameDistance);
+                this.enableTransition();
             }
         }
     }

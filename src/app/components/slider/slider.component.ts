@@ -23,7 +23,7 @@ export class SliderComponent implements OnInit, AfterViewInit {
   pointerDown: boolean;
   drag: any;
   sliderFrame: any;
-  @ViewChild('siema') el: ElementRef;
+  @in('siema') el: ElementRef;
   constructor(
 
   ) {
