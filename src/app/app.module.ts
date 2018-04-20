@@ -24,7 +24,6 @@ import { SwiperDirective } from './directives/swiper.directive';
     BrowserModule
   ],
   providers: [
-    SwiperDirective
   ],
   bootstrap: [AppComponent]
 })

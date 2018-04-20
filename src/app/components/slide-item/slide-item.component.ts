@@ -70,7 +70,6 @@ export class SlideItemComponent {
     static transitionStyle: any = {};
     @ViewChild('slideItem') el: ElementRef;
     @ViewChild('appSwiper') appSwiper: SwiperDirective;
-    // @ContentChildren(UILazyloadDirective) lazyLoadedImages: QueryList<UILazyloadDirective>;
     speed: number;
     currentPosition = 0;
     position = 0;
