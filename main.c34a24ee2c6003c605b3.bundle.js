@@ -2355,11 +2355,7 @@ webpackJsonp([1], {
                     i = Mo,
                     s = Ro;
                 try { No = e; var a = t.apply(n, r); return Mo = i, Ro = s, No = o, a } catch (e) {
-                    if (X(e) || !Mo) throw e;
-                    throw
-
-                    function(e, t) { return e instanceof Error || (e = new Error(e.toString())), Kt(e, t), e }(e, Yo())
-                }
+                    if (X(e) || !Mo) throw e;  throw function(e, t) { return e instanceof Error || (e = new Error(e.toString())), Kt(e, t), e }(e, Yo())}
             }
 
             function Yo() { return Mo ? new Wo(Mo, Ro) : null }
