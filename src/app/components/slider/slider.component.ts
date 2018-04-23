@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener, AfterViewInit, Input } from '@angular/core';
 @Component({
   selector: 'app-slider',
   templateUrl: './slider.component.html',
@@ -23,7 +23,8 @@ export class SliderComponent implements OnInit, AfterViewInit {
   pointerDown: boolean;
   drag: any;
   sliderFrame: any;
-  @in('siema') el: ElementRef;
+  // tslint:disable-next-line:no-input-rename
+  @Input('siema') el: ElementRef;
   constructor(
 
   ) {

@@ -6,7 +6,8 @@ import {
     QueryList,
     ElementRef,
     Input,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    OnInit
 } from '@angular/core';
 
 import { SwiperDirective } from '../../directives/swiper.directive';
@@ -66,10 +67,10 @@ import { SwiperDirective } from '../../directives/swiper.directive';
         }
     `]
 })
-export class SlideItemComponent {
+export class SlideItemComponent implements OnInit {
     static transitionStyle: any = {};
     @ViewChild('slideItem') el: ElementRef;
-    @ViewChild('appSwiper') appSwiper: SwiperDirective;
+    @ViewChild(SwiperDirective) swiper: SwiperDirective;
     speed: number;
     currentPosition = 0;
     position = 0;
@@ -79,6 +80,9 @@ export class SlideItemComponent {
         private ref: ChangeDetectorRef
     ) { }
 
+    ngOnInit() {
+
+    }
 
     get transition() {
         return SlideItemComponent.transitionStyle;
@@ -113,9 +117,23 @@ export class SlideItemComponent {
         this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'none');
         this.renderer.setStyle(this.el.nativeElement, '-o-transition', 'none');
         this.renderer.setStyle(this.el.nativeElement, '-ms-transition', 'none');
+        // this.transition = {
+        //     "transition": "none",
+        //     "-moz-transition": "none",
+        //     "-webkit-transition": "none",
+        //     "-o-transition": "none",
+        //     "-ms-transition": "none"
+        // }
     }
 
     enableTransition() {
+        // this.transition = {
+        //     "transition": "transform .5s",
+        //     "-moz-transition": "transform .5s",
+        //     "-webkit-transition": "transform .5s",
+        //     "-o-transition": "transform .5s",
+        //     "-ms-transition": "transform .5s",
+        // }
         this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform');
         this.renderer.setStyle(this.el.nativeElement, '-moz-transition', 'transform');
         this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'transform');
@@ -143,6 +161,7 @@ export class SlideItemComponent {
         this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
         setTimeout(() => {
             this.renderer.setStyle(this.el.nativeElement, 'transition', 'opacity ' + duration + 'ms');
+            // this.renderer.setStyle(this.el.nativeElement, "transition-duration", duration+ "ms");
             this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
         }, 0);
     }

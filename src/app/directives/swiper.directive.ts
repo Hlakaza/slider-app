@@ -1,11 +1,10 @@
-import { Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter, Input, OnInit, ContentChildren, QueryList, ViewChild, forwardRef } from '@angular/core';
-// import { SlideItemComponent } from '../components/slide-item/slide-item.component';
+import { Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter, Input, OnInit } from '@angular/core';
 
 const ZERO = 0.000000000001;
 
 @Directive({
-    selector: '[appSSwiper]',
-    exportAs: 'appSwiper'
+    selector: '[appSwiper]',
+    exportAs: 'swiper'
 })
 export class SwiperDirective implements OnInit {
     static canISwipe = true;
@@ -14,36 +13,53 @@ export class SwiperDirective implements OnInit {
     lastPos: number = ZERO;
     swipeDistance: number = ZERO;
     firstSwipeDate = Date.now();
-    // tslint:disable-next-line:no-output-on-prefix
+
     @Output() onSwipeRight: EventEmitter<any> = new EventEmitter<any>();
-    // tslint:disable-next-line:no-output-on-prefix
     @Output() onSwipeLeft: EventEmitter<any> = new EventEmitter<any>();
-    // tslint:disable-next-line:no-output-on-prefix
     @Output() onSwipeStart: EventEmitter<any> = new EventEmitter<any>();
-    // tslint:disable-next-line:no-output-on-prefix
     @Output() onSwipeEnd: EventEmitter<any> = new EventEmitter<any>();
     @Output() swipeLeft: EventEmitter<any> = new EventEmitter<any>();
     @Output() swipeRight: EventEmitter<any> = new EventEmitter<any>();
-    // @ViewChild(forwardRef(() => SlideItemComponent))
-    //  private items: SlideItemComponent;
+
     constructor(
         private el: ElementRef,
-        private renderer: Renderer2,
+        private renderer: Renderer2
     ) { }
 
 
     ngOnInit() {
         this.onSwipeEnd.subscribe(() => {
-
+            SwiperDirective.canISwipe = false;
+            setTimeout(() => {
+                SwiperDirective.canISwipe = true;
+            }, 350);
         });
         this.swipeLeft.subscribe(() => {
-            // SwiperDirective.canISwipe = false;
+            SwiperDirective.canISwipe = false;
             setTimeout(() => {
                 SwiperDirective.canISwipe = true;
             }, 350);
         });
         this.swipeRight.subscribe(() => {
-            // SwiperDirective.canISwipe = false;
+            SwiperDirective.canISwipe = false;
+            setTimeout(() => {
+                SwiperDirective.canISwipe = true;
+            }, 350);
+        });
+        this.onSwipeRight.subscribe(() => {
+            SwiperDirective.canISwipe = false;
+            setTimeout(() => {
+                SwiperDirective.canISwipe = true;
+            }, 350);
+        });
+        this.onSwipeLeft.subscribe(() => {
+            SwiperDirective.canISwipe = false;
+            setTimeout(() => {
+                SwiperDirective.canISwipe = true;
+            }, 350);
+        });
+        this.onSwipeStart.subscribe(() => {
+            SwiperDirective.canISwipe = false;
             setTimeout(() => {
                 SwiperDirective.canISwipe = true;
             }, 350);
@@ -62,7 +78,6 @@ export class SwiperDirective implements OnInit {
         this.initialPos = event.clientX;
         this.swipeDistance = 0;
         this.onSwipeStart.emit();
-        console.log('mouse down');
     }
 
     @HostListener('document:mouseup', ['$event'])
@@ -92,7 +107,6 @@ export class SwiperDirective implements OnInit {
 
             if (swipeFrameDistance > 0) {
                 this.onSwipeLeft.emit(swipeFrameDistance);
-                console.log('swiped', swipeFrameDistance);
             } else {
                 this.onSwipeRight.emit(swipeFrameDistance);
             }
@@ -134,12 +148,8 @@ export class SwiperDirective implements OnInit {
         this.initialPos = this.lastPos = ZERO;
         if (this.swipeDistance > 100) {
             this.swipeLeft.emit();
-            // this.fadeLeft();
-            console.log('slide to the left',  this.swipeLeft.emit());
         } else if (this.swipeDistance < -100) {
             this.swipeRight.emit();
-            // this.fadeRight();
-            console.log('slide to the Right',  this.swipeRight.emit());
         } else {
             this.onSwipeEnd.emit();
         }

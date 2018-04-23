@@ -10,8 +10,7 @@ import {
     EventEmitter,
     ElementRef,
     AfterViewInit,
-    OnDestroy,
-    Renderer2
+    OnDestroy
 } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
@@ -19,14 +18,14 @@ import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/throttleTime';
 
-import { SlideItemComponent } from '../../components/slide-item/slide-item.component';
-const ZERO = 0.000000000001;
+import { SlideItemComponent } from '../slide-item/slide-item.component';
+
 @Component({
     selector: 'app-slide',
     template : `
     <div (mouseenter)="(autoPlay)?autoPlayFunction(false):null" (mouseleave)="(autoPlay)?autoPlayFunction(true):null">
         <ng-content></ng-content>
-        <app-dots *ngIf="isDotsVisible" [dots-count]="items.length" position="right" [active-dot]="currentItemIndex" (on-click)="goTo($event)"></app-dots>
+        <app-dots *ngIf="isDotsVisible" [dots-count]="items.length" position="middle" [active-dot]="currentItemIndex" (on-click)="goTo($event)"></app-dots>
         <app-arrow *ngIf="isArrowsVisible" dir="left" (on-click)="prev()" [disabled]="false"></app-arrow>
         <app-arrow *ngIf="isArrowsVisible" dir="right" (on-click)="next()" [disabled]="false"></app-arrow>
     </div>
@@ -40,20 +39,9 @@ const ZERO = 0.000000000001;
     `],
 })
 export class SlideComponent implements OnInit, AfterViewInit, OnDestroy {
-
-    // swipe
-
-static canISwipe = true;
-isDown = false;
-initialPos: number = ZERO;
-lastPos: number = ZERO;
-swipeDistance: number = ZERO;
-firstSwipeDate = Date.now();
-
-// swipe
-    public subscriptions: Subscription;
     private nextSubject: Subject<any> = new Subject<any>();
     private prevSubject: Subject<any> = new Subject<any>();
+    private subscriptions: Subscription;
     // tslint:disable-next-line:no-output-on-prefix
     @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
     @Input() height = '300px';
@@ -65,12 +53,11 @@ firstSwipeDate = Date.now();
     @Input() infinite = true;
     @Input() fade = false;
     // tslint:disable-next-line:no-input-rename
-    @Input('app-dots') isDotsVisible = true;
+    @Input('dots') isDotsVisible = true;
     // tslint:disable-next-line:no-input-rename
-    @Input('app-arrows') isArrowsVisible = true;
+    @Input('arrows') isArrowsVisible = true;
 
     @ContentChildren(SlideItemComponent) items: QueryList<SlideItemComponent>;
-
 
     private _width: number;
     currentItemIndex = 0;
@@ -80,8 +67,7 @@ firstSwipeDate = Date.now();
     private lastItemIndex: number; // ..
 
     constructor(
-        private el: ElementRef,
-        private renderer: Renderer2,
+        private el: ElementRef
     ) { }
 
     ngOnInit() {
@@ -90,21 +76,23 @@ firstSwipeDate = Date.now();
         if (this.autoPlay) {
             this.autoPlayFunction(true);
         }
-
-       (this.nextSubject.throttleTime(this.speed).subscribe(() => {
+        this.nextSubject.throttleTime(this.speed).subscribe(() => {
             if (!this.fade) {
                 this.slideLeft();
             } else {
                 this.fadeLeft();
             }
-        }));
-
-       (this.prevSubject.throttleTime(this.speed).subscribe(() => {
+        });
+       this.prevSubject.throttleTime(this.speed).subscribe(() => {
             if (!this.fade) {
                 this.slideRight();
             } else {
                 this.fadeRight();
             }
+        });
+       (this.onChange.subscribe((index: number) => {
+            const item = this.getItemByIndex(index);
+            // item.lazyLoad();
         }));
     }
 
@@ -118,68 +106,69 @@ firstSwipeDate = Date.now();
         this.firstItemIndex = 0;
         this.lastItemIndex = this.items.length - 1;
         if (!this.fade) {
-            // this.items.forEach((item, itemIndex) => {
-            //     let totalDistanceSwiped = 0;
-            //     item.speed = this.speed;
-            //     item.position = this._width * itemIndex;
-            //     item.currentPosition = item.position;
-            //     item.disableTransition();
-            //     item.moveTo(item.position);
-            //    (item.appSwiper.onSwipeLeft.subscribe((distance: number) => {
-            //         totalDistanceSwiped += Math.abs(distance);
-            //         const shortDistance = distance / Math.pow(totalDistanceSwiped, .4);
-            //         if (itemIndex === this.firstItemIndex && this.infinite) {
-            //             this.rotateRight();
-            //         }
-            //         this.items.forEach((itm, index) => {
-            //             if ((itemIndex === this.firstItemIndex || (itemIndex === this.lastItemIndex && distance > 0))
-            //                 && !this.infinite) {
-            //                 itm.currentPosition += shortDistance;
-            //             } else {
-            //                 itm.currentPosition += distance;
-            //             }
-            //             itm.moveTo(itm.currentPosition);
-            //         });
-            //     }));
+            this.items.forEach((item, itemIndex) => {
+                let totalDistanceSwiped = 0;
+                item.speed = this.speed;
+                item.position = this._width * itemIndex;
+                item.currentPosition = item.position;
+                item.disableTransition();
+                item.moveTo(item.position);
 
-            //     (item.appSwiper.onSwipeRight.subscribe((distance: number) => {
-            //         totalDistanceSwiped += Math.abs(distance);
-            //         const shortDistance = distance / Math.pow(totalDistanceSwiped, .4);
-            //         if (itemIndex === this.lastItemIndex && this.infinite) {
-            //             this.rotateLeft();
-            //         }
-            //         this.items.forEach((itm, index) => {
-            //             if ((itemIndex === this.lastItemIndex || (itemIndex === this.firstItemIndex && distance < 0))
-            //                 && !this.infinite) {
-            //                 itm.currentPosition += shortDistance;
-            //             } else {
-            //                 itm.currentPosition += distance;
-            //             }
-            //             itm.moveTo(itm.currentPosition);
-            //         });
-            //     }));
+               (item.swiper.onSwipeLeft.subscribe((distance: number) => {
+                    totalDistanceSwiped += Math.abs(distance);
+                    const shortDistance = distance / Math.pow(totalDistanceSwiped, .4);
+                    if (itemIndex === this.firstItemIndex && this.infinite) {
+                        this.rotateRight();
+                    }
+                    this.items.forEach((itm, index) => {
+                        if ((itemIndex === this.firstItemIndex || (itemIndex === this.lastItemIndex && distance > 0))
+                            && !this.infinite) {
+                            itm.currentPosition += shortDistance;
+                        } else {
+                            itm.currentPosition += distance;
+                        }
+                        itm.moveTo(itm.currentPosition);
+                    });
+                }));
 
-            //    (item.appSwiper.swipeLeft.subscribe(() => {
-            //         totalDistanceSwiped = 0;
-            //         this.fadeLeft();
-            //     }));
+               (item.swiper.onSwipeRight.subscribe((distance: number) => {
+                    totalDistanceSwiped += Math.abs(distance);
+                    const shortDistance = distance / Math.pow(totalDistanceSwiped, .4);
+                    if (itemIndex === this.lastItemIndex && this.infinite) {
+                        this.rotateLeft();
+                    }
+                    this.items.forEach((itm, index) => {
+                        if ((itemIndex === this.lastItemIndex || (itemIndex === this.firstItemIndex && distance < 0))
+                            && !this.infinite) {
+                            itm.currentPosition += shortDistance;
+                        } else {
+                            itm.currentPosition += distance;
+                        }
+                        itm.moveTo(itm.currentPosition);
+                    });
+                }));
 
-            //    (item.appSwiper.swipeRight.subscribe(() => {
-            //         totalDistanceSwiped = 0;
-            //         this.fadeRight();
-            //     }));
+               (item.swiper.swipeLeft.subscribe(() => {
+                    totalDistanceSwiped = 0;
+                    this.slideLeft();
+                }));
 
-            //     (item.appSwiper.onSwipeEnd.subscribe(() => {
-            //         totalDistanceSwiped = 0;
-            //         this.enableTransition();
-            //         this.slideToPrevPosition();
-            //     }));
+                (item.swiper.swipeRight.subscribe(() => {
+                    totalDistanceSwiped = 0;
+                    this.slideRight();
+                }));
 
-            //    (item.appSwiper.onSwipeStart.subscribe(() => {
-            //         totalDistanceSwiped = 0;
-            //         this.disableTransition();
-            //     }));
-            // });
+               (item.swiper.onSwipeEnd.subscribe(() => {
+                    totalDistanceSwiped = 0;
+                    this.enableTransition();
+                    this.slideToPrevPosition();
+                }));
+
+                (item.swiper.onSwipeStart.subscribe(() => {
+                    totalDistanceSwiped = 0;
+                    this.disableTransition();
+                }));
+            });
         } else {
             this.items.forEach((item, index) => {
                 item.zIndex = this.items.length - index;
@@ -187,109 +176,10 @@ firstSwipeDate = Date.now();
             });
         }
     }
-    // Swiping
-    @HostListener('mousedown', ['$event'])
-    onMouseDown(event: any) {
-        // if (!SwiperDirective.canISwipe) {
-        //     return;
-        // }
-        this.firstSwipeDate = Date.now();
-        this.isDown = true;
-        this.initialPos = event.clientX;
-        this.swipeDistance = 0;
-        // this.onSwipeStart.emit();
-        console.log('mouse down');
-    }
-
-    @HostListener('document:mouseup', ['$event'])
-    onMouseUp(event: any) {
-        if (!this.isDown) {
-            return;
-        }
-        this.initialPos = this.lastPos = ZERO;
-        this.isDown = false;
-
-        if (this.swipeDistance > 100) {
-            // this.swipeLeft.emit();
-            this.slideLeft();
-        } else if (this.swipeDistance < -100) {
-            // this.swipeRight.emit();
-            this.slideRight();
-        } else {
-            // this.onSwipeEnd.emit();
-        }
-        this.swipeDistance = ZERO;
-    }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: any) {
-        if (this.isDown) {
-            const swipeFrameDistance = event.clientX - this.initialPos - this.lastPos;
-            this.swipeDistance += swipeFrameDistance;
-            this.lastPos = event.clientX - this.initialPos;
-
-            if (swipeFrameDistance > 0) {
-                // this.onSwipeLeft.emit(swipeFrameDistance);
-                this.slideLeft();
-                console.log('swiped left', swipeFrameDistance);
-            } else {
-                // this.onSwipeRight.emit(swipeFrameDistance);
-                this.slideRight();
-                console.log('swiped right', swipeFrameDistance);
-                this.enableTransition();
-            }
-        }
-    }
-
-    @HostListener('touchmove', ['$event'])
-    onTouchMove(event: any) {
-        const touch = event.touches[0] || event.changedTouches[0];
-        let swipeFrameDistance = touch.clientX - this.initialPos - this.lastPos;
-        swipeFrameDistance = swipeFrameDistance < 30 ? swipeFrameDistance : 30;
-        this.swipeDistance += swipeFrameDistance;
-        this.lastPos = touch.clientX - this.initialPos;
-
-        if (swipeFrameDistance > 0) {
-            // this.onSwipeLeft.emit(swipeFrameDistance);
-            this.slideLeft();
-        } else {
-            this.slideRight();
-            // this.onSwipeRight.emit(swipeFrameDistance);
-        }
-    }
-
-    @HostListener('touchstart', ['$event'])
-    onTouchStart(event: any) {
-        // if (!SwiperDirective.canISwipe) {
-        //     return;
-        // }
-        const touch = event.touches[0] || event.changedTouches[0];
-        this.firstSwipeDate = Date.now();
-        this.initialPos = touch.clientX;
-        this.swipeDistance = ZERO;
-        // this.onSwipeStart.emit();
-    }
-
-    @HostListener('touchend', ['$event'])
-    onTouchEnd(event: any) {
-        this.initialPos = this.lastPos = ZERO;
-        if (this.swipeDistance > 100) {
-            // this.swipeLeft.emit();
-            this.slideLeft();
-            console.log('slide to the left');
-        } else if (this.swipeDistance < -100) {
-            // this.swipeRight.emit();
-            this.slideRight();
-            console.log('slide to the Right');
-        } else {
-            // this.onSwipeEnd.emit();
-        }
-        this.swipeDistance = ZERO;
-    }
 
     next() {
+
         this.prevSubject.next();
-        console.log('here we go');
     }
 
     prev() {
@@ -338,23 +228,23 @@ firstSwipeDate = Date.now();
     }
 
     slideLeft() {
-        // if (!this.infinite) {
+        if (!this.infinite) {
             if (this.currentItemIndex === 0) {
                 this.slideToPrevPosition();
                 return;
             }
-        // }
-        // this.slideTo(this.currentItemIndex - 1);
+        }
+        this.slideTo(this.currentItemIndex - 1);
     }
 
     slideRight() {
-        // if (!this.infinite) {
+        if (!this.infinite) {
             if (this.currentItemIndex === this.items.length - 1) {
                 this.slideToPrevPosition();
                 return;
             }
-        // }
-        // this.slideTo(this.currentItemIndex + 1);
+        }
+        this.slideTo(this.currentItemIndex + 1);
     }
 
     slideToPrevPosition() {
@@ -473,7 +363,7 @@ firstSwipeDate = Date.now();
                 return 1;
             } else if (item1.position < item2.position) {
                 return -1;
-                 } else {
+                   } else {
                 return 0;
                  }
         });
@@ -489,7 +379,7 @@ firstSwipeDate = Date.now();
     }
 
     ngOnDestroy() {
-        this.items.destroy();
+        this.subscriptions.unsubscribe();
     }
 
     autoPlayFunction(boolean) {
