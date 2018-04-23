@@ -25,7 +25,7 @@ import { SlideItemComponent } from '../slide-item/slide-item.component';
     template : `
     <div (mouseenter)="(autoPlay)?autoPlayFunction(false):null" (mouseleave)="(autoPlay)?autoPlayFunction(true):null">
         <ng-content></ng-content>
-        <app-dots *ngIf="isDotsVisible" [dots-count]="items.length" position="middle" [active-dot]="currentItemIndex" (on-click)="goTo($event)"></app-dots>
+        <app-dots *ngIf="isDotsVisible" [dots-count]="items.length" position="right" [active-dot]="currentItemIndex" (on-click)="goTo($event)"></app-dots>
         <app-arrow *ngIf="isArrowsVisible" dir="left" (on-click)="prev()" [disabled]="false"></app-arrow>
         <app-arrow *ngIf="isArrowsVisible" dir="right" (on-click)="next()" [disabled]="false"></app-arrow>
     </div>
@@ -92,7 +92,6 @@ export class SlideComponent implements OnInit, AfterViewInit, OnDestroy {
         });
        (this.onChange.subscribe((index: number) => {
             const item = this.getItemByIndex(index);
-            // item.lazyLoad();
         }));
     }
 
