@@ -29,10 +29,7 @@ export class SwiperDirective implements OnInit {
 
     ngOnInit() {
         this.onSwipeEnd.subscribe(() => {
-            SwiperDirective.canISwipe = false;
-            setTimeout(() => {
-                SwiperDirective.canISwipe = true;
-            }, 350);
+
         });
         this.swipeLeft.subscribe(() => {
             SwiperDirective.canISwipe = false;
@@ -46,27 +43,7 @@ export class SwiperDirective implements OnInit {
                 SwiperDirective.canISwipe = true;
             }, 350);
         });
-        this.onSwipeRight.subscribe(() => {
-            SwiperDirective.canISwipe = false;
-            setTimeout(() => {
-                SwiperDirective.canISwipe = true;
-            }, 350);
-        });
-        this.onSwipeLeft.subscribe(() => {
-            SwiperDirective.canISwipe = false;
-            setTimeout(() => {
-                SwiperDirective.canISwipe = true;
-            }, 350);
-        });
-        this.onSwipeStart.subscribe(() => {
-            SwiperDirective.canISwipe = false;
-            setTimeout(() => {
-                SwiperDirective.canISwipe = true;
-            }, 350);
-        });
     }
-
-
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: any) {
