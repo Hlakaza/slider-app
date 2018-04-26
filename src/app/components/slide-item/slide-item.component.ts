@@ -39,10 +39,10 @@ import { SwiperDirective } from '../../directives/swiper.directive';
             -webkit-transition: transform;
             -o-transition: transform;
             -ms-transition: transform;
-            transition-timing-function: ease;
-            -moz-transition-timing-function: ease;
-            -o-transition-timing-function: ease;
-            -ms-transition-timing-function: ease;
+            transition-timing-function: ease-in;
+            -moz-transition-timing-function: ease-in;
+            -o-transition-timing-function: ease-in;
+            -ms-transition-timing-function: ease-in;
         }
 
         .slide-item{
@@ -112,39 +112,39 @@ export class SlideItemComponent implements OnInit {
     }
 
     disableTransition() {
-        this.renderer.setStyle(this.el.nativeElement, 'transition', 'none');
-        this.renderer.setStyle(this.el.nativeElement, '-moz-transition', 'none');
-        this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'none');
-        this.renderer.setStyle(this.el.nativeElement, '-o-transition', 'none');
-        this.renderer.setStyle(this.el.nativeElement, '-ms-transition', 'none');
-        // this.transition = {
-        //     "transition": "none",
-        //     "-moz-transition": "none",
-        //     "-webkit-transition": "none",
-        //     "-o-transition": "none",
-        //     "-ms-transition": "none"
-        // }
+        // this.renderer.setStyle(this.el.nativeElement, 'transition', 'none');
+        // this.renderer.setStyle(this.el.nativeElement, '-moz-transition', 'none');
+        // this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'none');
+        // this.renderer.setStyle(this.el.nativeElement, '-o-transition', 'none');
+        // this.renderer.setStyle(this.el.nativeElement, '-ms-transition', 'none');
+        this.transition = {
+            'transition': 'none',
+            '-moz-transition': 'none',
+            '-webkit-transition': 'none',
+            '-o-transition': 'none',
+            '-ms-transition': 'none'
+        };
     }
 
     enableTransition() {
-        // this.transition = {
-        //     "transition": "transform .5s",
-        //     "-moz-transition": "transform .5s",
-        //     "-webkit-transition": "transform .5s",
-        //     "-o-transition": "transform .5s",
-        //     "-ms-transition": "transform .5s",
-        // }
-        this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform');
-        this.renderer.setStyle(this.el.nativeElement, '-moz-transition', 'transform');
-        this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'transform');
-        this.renderer.setStyle(this.el.nativeElement, '-o-transition', 'transform');
-        this.renderer.setStyle(this.el.nativeElement, '-ms-transition', 'transform');
+        this.transition = {
+            'transition': 'transform .5s',
+            '-moz-transition': 'transform .5s',
+            '-webkit-transition': 'transform .5s',
+            '-o-transition': 'transform .5s',
+            '-ms-transition': 'transform .5s',
+        };
+        // this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform');
+        // this.renderer.setStyle(this.el.nativeElement, '-moz-transition', 'transform');
+        // this.renderer.setStyle(this.el.nativeElement, '-webkit-transition', 'transform');
+        // this.renderer.setStyle(this.el.nativeElement, '-o-transition', 'transform');
+        // this.renderer.setStyle(this.el.nativeElement, '-ms-transition', 'transform');
 
-        this.renderer.setStyle(this.el.nativeElement, 'transition-duration', this.speed + 'ms');
-        this.renderer.setStyle(this.el.nativeElement, '-moz-transition-duration', this.speed + 'ms');
-        this.renderer.setStyle(this.el.nativeElement, '-webkit-transition-duration', this.speed + 'ms');
-        this.renderer.setStyle(this.el.nativeElement, '-o-transition-duration', this.speed + 'ms');
-        this.renderer.setStyle(this.el.nativeElement, '-ms-transition-duration', this.speed + 'ms');
+        // this.renderer.setStyle(this.el.nativeElement, 'transition-duration', this.speed + 'ms');
+        // this.renderer.setStyle(this.el.nativeElement, '-moz-transition-duration', this.speed + 'ms');
+        // this.renderer.setStyle(this.el.nativeElement, '-webkit-transition-duration', this.speed + 'ms');
+        // this.renderer.setStyle(this.el.nativeElement, '-o-transition-duration', this.speed + 'ms');
+        // this.renderer.setStyle(this.el.nativeElement, '-ms-transition-duration', this.speed + 'ms');
     }
 
     fadeOut(duration: number) {

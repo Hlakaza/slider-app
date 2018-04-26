@@ -110,7 +110,7 @@ export class SlideComponent implements OnInit, AfterViewInit, OnDestroy {
                 item.speed = this.speed;
                 item.position = this._width * itemIndex;
                 item.currentPosition = item.position;
-                item.disableTransition();
+                // item.disableTransition();
                 item.moveTo(item.position);
 
                (item.swiper.onSwipeLeft.subscribe((distance: number) => {
@@ -177,7 +177,6 @@ export class SlideComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     next() {
-
         this.prevSubject.next();
     }
 

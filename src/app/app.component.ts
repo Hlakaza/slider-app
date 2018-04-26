@@ -7,4 +7,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  isMobile: boolean;
+  constructor() {
+     if (window.innerWidth < 1024) {
+       this.isMobile = true;
+     } else {
+       this.isMobile = false;
+     }
+  }
 }

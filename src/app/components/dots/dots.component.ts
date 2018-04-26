@@ -34,11 +34,11 @@ import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter, HostBind
 
         .dot{
             height: 10px;
-            width: 10px;
-            border-radius: 5px;
+            width: 35px;
+            border-radius: 0;
             background: white;
             opacity: .6;
-            margin: 0 4px;
+            margin: 0 5px;
             display: inline-block;
         }
 
