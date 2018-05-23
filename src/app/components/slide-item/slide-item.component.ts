@@ -15,7 +15,7 @@ import { SwiperDirective } from '../../directives/swiper.directive';
 @Component({
     selector: 'app-slide-item',
     template : `
-        <div #slideItem class="slide-item fade" [ngStyle]="transition" appSwiper tabindex="-1" style="outline: none">
+        <div #slideItem appSwiper class="slide-item fade" [ngStyle]="transition" tabindex="-1" style="outline: none">
         <ng-content></ng-content>
         </div>
    `,

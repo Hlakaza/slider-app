@@ -63,6 +63,7 @@ export class DotsComponent implements OnInit {
 
     @HostBinding('class')
     @Input() position = 'left';
+    // tslint:disable-next-line:no-output-on-prefix
     @Output('on-click') onClick: EventEmitter<number> = new EventEmitter<number>();
 
     constructor() {
